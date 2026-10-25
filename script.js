@@ -1,25 +1,22 @@
 /* ===================== DATA APLIKASI =====================
-   CARA MENGISI PROYEK YANG SUDAH SELESAI:
-   Ganti "url: null" jadi "url: 'https://link-live-demo-kalian', kind: 'iframe'"
-   pada proyek yang bersangkutan. Selama url masih null, ikon itu
-   akan membuka jendela "Segera Hadir" alih-alih iframe.
+   PROYEK KELOMPOK DEVOPS_1
    ========================================================== */
 const APPS = [
   {
-    id: "proyek1",
-    name: "Proyek 1",
-    color: "linear-gradient(135deg,#d8ab3a,#b8862a)",
-    url: null,
-    icon: `<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 12l2.5 2.5L16 9"/>`,
-    kind: "placeholder"
+    id: "bazarkita",
+    name: "BazarKita (Web)",
+    color: "linear-gradient(135deg,#0F2B46,#D89B3C)", // Tema Biru Tinta & Emas
+    url: "https://github.com/syifaulaskiaa-beep/bazarkita", // Link GitHub BazarKita
+    icon: `<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>`,
+    kind: "github" // Tipe khusus untuk menampilkan tombol link GitHub
   },
   {
-    id: "proyek2",
-    name: "Proyek 2",
-    color: "linear-gradient(135deg,#7c4dd1,#4c1d95)",
-    url: null,
-    icon: `<path d="M4 9l1.5-5h13L20 9M4 9h16M4 9v10a1 1 0 001 1h14a1 1 0 001-1V9M9 13a3 3 0 006 0"/>`,
-    kind: "placeholder"
+    id: "erd_bazarkita",
+    name: "ERD BazarKita",
+    color: "linear-gradient(135deg,#2563eb,#1e40af)", // Tema Biru
+    url: "https://drive.google.com/file/d/1ajpFfpf5myEDuAkujMAGka1--G7wYmSn/preview", // Link Drive diubah ke /preview agar bisa tampil di iframe
+    icon: `<path d="M4 4h16v16H4z M4 9h16 M4 15h16 M9 4v16"/>`,
+    kind: "iframe"
   },
   {
     id: "proyek3",
@@ -201,11 +198,27 @@ function openApp(id){
   el.style.left = (40 + offset) + "px";
   el.style.top = (30 + offset) + "px";
 
-  const bodyHtml = app.kind === "iframe"
-    ? `<iframe src="${app.url}" title="${app.name}" loading="lazy"></iframe>`
-    : app.kind === "placeholder"
-    ? placeholderContentHTML(app)
-    : aboutContentHTML();
+  // LOGIKA PEMBUATAN KONTEN JENDELA
+  let bodyHtml;
+  if (app.kind === "iframe") {
+    bodyHtml = `<iframe src="${app.url}" title="${app.name}" loading="lazy" style="width:100%; height:100%; border:none;"></iframe>`;
+  } else if (app.kind === "placeholder") {
+    bodyHtml = placeholderContentHTML(app);
+  } else if (app.kind === "github") {
+    bodyHtml = `
+      <div class="about-content" style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; height:100%; padding:20px;">
+        <h2 style="margin-bottom:10px;">${app.name}</h2>
+        <p style="max-width:400px; margin-bottom:20px; font-size:14px; color:#aaa; line-height:1.5;">
+          Aplikasi ini berjalan di atas framework Laravel (PHP & MySQL). Karena Mini OS ini di-hosting menggunakan GitHub Pages (statis), kode sumber proyek dapat dilihat langsung melalui repository GitHub.
+        </p>
+        <a href="${app.url}" target="_blank" style="display:inline-block; padding:12px 24px; background:linear-gradient(135deg,#0F2B46,#D89B3C); color:#fff; text-decoration:none; border-radius:8px; font-weight:bold; font-family:inherit; box-shadow:0 4px 6px rgba(0,0,0,0.3);">
+          Buka Repository GitHub
+        </a>
+      </div>
+    `;
+  } else {
+    bodyHtml = aboutContentHTML();
+  }
 
   el.innerHTML = `
     <div class="win-titlebar" data-role="drag">
